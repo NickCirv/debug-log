@@ -1,0 +1,32 @@
+{
+  "name": "debug-log",
+  "version": "1.0.0",
+  "description": "Zero-dependency structured debug logging with namespaces, levels, redaction, and a beautiful CLI viewer.",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./logger": "./index.js"
+  },
+  "bin": {
+    "debug-log": "./cli.js",
+    "dlog": "./cli.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "developer-tools",
+    "cli",
+    "nodejs",
+    "zero-dependencies",
+    "logging",
+    "debug",
+    "structured-logging"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NickCirv/debug-log"
+  }
+}
