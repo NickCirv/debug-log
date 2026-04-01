@@ -1,3 +1,5 @@
+![Banner](banner.svg)
+
 # debug-log
 > Zero-dependency structured debug logging with namespaces, levels, redaction, and a CLI viewer.
 
