@@ -1,74 +1,78 @@
-<div align="center">
+![Nicholas Ashkar — debug-log](assets/nicholas-ashkar/banner.png)
 
 # debug-log
 
-**Structured debug logging with namespaces, redaction, and a CLI viewer — zero dependencies.**
+Provides a namespaced JavaScript logger and a CLI for reading structured log files.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-0B0A09?style=flat&labelColor=0B0A09&color=555)](LICENSE)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-0B0A09?style=flat&labelColor=0B0A09&color=brightgreen)](package.json)
-[![Node >=18](https://img.shields.io/badge/node-%3E%3D18-0B0A09?style=flat&labelColor=0B0A09&color=555)](package.json)
 
-</div>
 
-## Install
 
-```bash
-npx github:NickCirv/debug-log
-```
 
-## Usage
 
-```bash
-# View a log file
-dlog view app.log
+<a id="usage"></a>
 
-# Tail live with filters
-dlog view app.log --follow --level warn --namespace myapp:api
+<a id="view-a-log-file"></a>
 
-# Stats: error rate, top namespaces, busiest hour
-dlog stats app.log
+<a id="tail-live-with-filters"></a>
 
-# Text search
-dlog search app.log --query "timeout"
-```
+<a id="stats-error-rate-top-namespaces-busiest-hour"></a>
 
-| Flag | Description |
-|------|-------------|
-| `--follow, -f` | Tail for new entries |
-| `--level, -l <level>` | Filter: `debug` \| `info` \| `warn` \| `error` \| `fatal` |
-| `--namespace, -n <ns>` | Filter by namespace prefix |
-| `--since <duration>` | Filter: `"10 minutes ago"`, `"1 hour ago"` |
-| `--query, -q <text>` | Search log text (search command) |
+<a id="text-search"></a>
 
 ## What it does
 
-`debug-log` is a Node.js library and CLI for structured logging. The library writes NDJSON logs to file (one JSON object per line) with support for namespaced children, automatic field redaction, timers, and performance marks. The `dlog` CLI reads those files and renders them with colored output, level/namespace/time filters, live-tail mode, and summary stats.
+- CreateLogger API.
+- Levels and namespace filtering.
+- Bound context and timers.
+- Configurable formatting/redaction.
+- JSON log viewer.
 
-Log output format:
 
+<a id="install"></a>
+
+## Quickstart
+
+Prerequisites: Node.js `>=20` and npm. The checkout below pins the source used for this documentation.
+
+```sh
+git clone https://github.com/NickCirv/debug-log.git
+cd debug-log
+git checkout d7f39a7057383fa14fc54f37bdbee327ce4d9879
+node cli.js --help
 ```
-[10:42:01] INFO  myapp           Server started            port=3000
-[10:42:03] DEBUG myapp:api       Request received          GET /users
-[10:42:05] ERROR myapp:db        Connection failed         error="ETIMEDOUT"
-```
 
-Library quick-start:
+**Expected behavior (illustrative, not captured):** Shows log viewing, searching and statistics commands; the integration example below demonstrates the library API.
+
+For a direct local integration, save this as `example.mjs` in the checkout and run `DEBUG=example node example.mjs`:
 
 ```js
-import { createLogger } from 'debug-log';
-
-const log = createLogger('myapp', { redact: ['password', 'token'] });
-const api = log.child('api');   // namespace: myapp:api
-
-log.info('Server started', { port: 3000 });
-api.error('Request failed', { error: err.message });
+import { createLogger } from "./index.js";
+const log = createLogger("example", { format: "json", redact: ["token"] });
+log.info("Import completed", { rows: 2, token: "example-only" });
 ```
 
-Environment variable filters:
+This illustrates a structured event and configured key redaction; it was not executed in this review.
 
-```bash
-DEBUG=myapp:api LOG_LEVEL=warn node server.js
+Examples are source-inspected, **not runtime-tested**. See the research record for verification gaps.
+
+## Boundaries and data
+
+Redaction only covers configured keys and is not a complete secret detector. Logging can write sensitive context to stdout or an optional JSON file. DEBUG and LOG_LEVEL filters affect emitted messages.
+
+## Development
+
+The manifest defines `npm test` as:
+
+```sh
+node --test
 ```
 
----
-<sub>Zero dependencies · Node 18+ · MIT · by <a href="https://github.com/NickCirv">NickCirv</a></sub>
+The captured suite is a smoke check, not end-to-end behavior coverage. Examples include “entry is valid JavaScript”. Tests were not run for this documentation revision.
+
+See [implementation and command reference](docs/REFERENCE.md) for the package scripts and inspected interfaces, and [research record](docs/RESEARCH.md) for the pinned source, document decisions and unresolved checks.
+
+## License and contact
+
+See [LICENSE](LICENSE) for the original terms and attribution. Legal text is unchanged.
+
+[Nicholas Ashkar](https://nicholashkar.com/) · [Discuss a project](https://nicholashkar.com/#oxblood-contact)
